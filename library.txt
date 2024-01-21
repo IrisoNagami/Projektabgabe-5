@@ -1,0 +1,25 @@
+[tags]
+    0               Novel
+    1              Sci-fi
+    2             Fantasy
+
+[authors]
+    0               Frank             Herbert
+    1             William              Gibson
+    2                Neil              Gaiman
+
+[books]
+    0    0                                  %Dune%      978-0441172719    0    2
+    1    1                           %Neuromancer%      978-3608504880    0    1
+    2    2                         %American Gods%      978-3847905875    2
+
+[users]
+    0              Arthur              Morgan
+    1               Corvo              Attano
+    2               Harry              DuBois
+    3                   V                   V
+
+[borrowentries]
+    0    2
+    2    1
+    1    0
