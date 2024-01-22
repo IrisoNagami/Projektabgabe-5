@@ -13,7 +13,15 @@ void HandleCommand(stringstream &inputCommand)
 	inputCommand >> temp;
 	if (temp == "help")
 	{
-
+		cout << "->list [books/tags/authors/users] zeigt jeweils alle Objekte des Typs an\n";
+		cout << "->add [book/author/tag/user] fügt jeweiliges Objekt hinzu\n";
+		cout << "->delete [book/author/tag/user] löscht das jeweilige Objekt\n";
+		cout << "->show [book/author/tag/user] zeigt IDs der Objekte in der Klasse an\n";
+		cout << "->borrow [user] [book] leiht das Buch aus sofern es nicht schon ausgeliehen ist\n";
+		cout << "->return [user] [book] gibt das Buch zurück, sofern der User dieses ausgeliehen hat\n";
+		cout << "->status [book/user] gibt aus ob das Buch ausgeliehen ist oder welche Bücher vom User ausgeliehen werden\n";
+		cout << "->search [author/tag] gibt IDs der Bücher mit demjeweiligen Tag/Autor zurück\n";
+		return;
 	}
 	else if (temp == "list")
 	{
@@ -22,15 +30,17 @@ void HandleCommand(stringstream &inputCommand)
 		{
 			for (book b : bookList)
 			{
-				cout << b.bookID << " "
-					<<b.authorID << " "
-					<< b.titel << " "
-					<< b.ISBN;
+				string tempAusgabe;
+				tempAusgabe += to_string(b.bookID) + " ";
+				tempAusgabe += to_string(b.authorID) + " ";
+				tempAusgabe += b.titel + " ";
+				tempAusgabe += b.ISBN;
 				for (int i : b.tags)
 				{
-					cout << " " << i;
+					tempAusgabe += " " + to_string(i);
 				}
-				cout << '\n';
+				tempAusgabe += '\n';
+				cout << tempAusgabe;
 			}
 			return;
 		}
@@ -38,7 +48,10 @@ void HandleCommand(stringstream &inputCommand)
 		{
 			for (author a : authorList)
 			{
-				cout << a.authorID << " " << a.vorname << " " << a.nachname << '\n';
+				string tempAusgabe = to_string(a.authorID) + " ";
+				tempAusgabe += a.vorname + " ";
+				tempAusgabe += a.nachname + '\n';
+				cout << tempAusgabe;
 			}
 			return;
 		}
@@ -46,7 +59,9 @@ void HandleCommand(stringstream &inputCommand)
 		{
 			for (tag t : tagList)
 			{
-				cout << t.TagID << " " << t.name << '\n';
+				string tempAusgabe = to_string(t.TagID) + " ";
+				tempAusgabe += t.name + '\n';
+				cout << tempAusgabe;
 			}
 			return;
 		}
@@ -54,7 +69,10 @@ void HandleCommand(stringstream &inputCommand)
 		{
 			for (user u : userList)
 			{
-				cout << u.userID << " " << u.vorname << " " << u.nachname << '\n';
+				string tempAusgabe = to_string(u.userID) + " ";
+				tempAusgabe += u.vorname + " ";
+				tempAusgabe += u.nachname + '\n';
+				cout << tempAusgabe;
 			}
 			return;
 		}
@@ -238,6 +256,7 @@ void HandleCommand(stringstream &inputCommand)
 		inputCommand >> temp;
 		if (temp == "book")
 		{
+			inputCommand >> temp;
 			int tempID;
 			try
 			{
@@ -892,7 +911,7 @@ void HandleCommand(stringstream &inputCommand)
 		}
 		else if (temp == "tag")
 		{
-			inputCommand << temp;
+			inputCommand >> temp;
 			int tempID;
 			try
 			{

@@ -35,11 +35,11 @@ void GetData()
 {
     string speicher;
 
-    string datenbank = "library.txt";                                        // Libary als ifstream oeffnen
+    string datenbank = "library";                                        // Libary als ifstream oeffnen
     ifstream input_stream;
     input_stream.open(datenbank);
     if (!input_stream.is_open()) {                                       // datenbank neu erstellen falls diese nicht geoeffnet wurde
-        ofstream file("library.txt");
+        ofstream file(datenbank);
         file << "[tags]\n\n[authors]\n\n[books]\n\n[users]\n\n[borrowentries]";
         file.close();
         input_stream.open(datenbank);
@@ -47,45 +47,72 @@ void GetData()
 
 
 
-    getline(input_stream, speicher);                                                 //tags einlesen beginn
+    // Testen ob die Libary-Datei komplett leer ist
+    string leerTest;
+    input_stream >> leerTest;
+    if (leerTest == "") {
+        input_stream.close();
+        ofstream file(datenbank);
+        file << "[tags]\n\n[authors]\n\n[books]\n\n[users]\n\n[borrowentries]";
+        file.close();
+        input_stream.open(datenbank);
+    }
+    else {
+        for (int i = 0; i < leerTest.size(); ++i) {
+            input_stream.unget();
+        }
+    }
+    // Datenbank mit Grundaufbau erstellt
+
+    //tags einlesen beginn
+
+    stringstream tagStream;
+    tag tagSpeicher;
+    int tagNr;
+    string tagName;
+    string nachWs;
+    char zwischenSpeicher;
+    getline(input_stream, speicher);
     if (speicher == "[tags]") {
         while (true) {
             getline(input_stream, speicher);
-            for (int i = 0; i < speicher.size(); ++i) {
-                input_stream.unget();
-            }
             if (speicher == "[authors]") {
-                input_stream.unget();
+                for (int i = 0; i < speicher.size() + 1; ++i) {
+                    input_stream.unget();
+                }
                 break;
             }
-            if (speicher != "")
-            {
-                int  tagId;
-                string tagName;
-                string nachWs;
-                tag t;
-                input_stream >> tagId;
-                input_stream >> tagName;
-                getline(input_stream, speicher);
-
-                for (int i = 0; i < speicher.size(); ++i) {
-                    if (speicher[i] == ' ') {
-                        nachWs += speicher[i];
+            if (speicher != "") {
+                tagStream.clear();
+                skipws(tagStream);
+                tagStream << speicher;
+                tagStream >> tagNr;
+                tagStream >> tagName;
+                noskipws(tagStream);
+                while (true) {
+                    tagStream >> zwischenSpeicher;
+                    if (tagStream.eof())
+                        break;
+                    if (zwischenSpeicher == ' ') {
+                        nachWs += zwischenSpeicher;
                     }
-                    if (speicher[i] != ' ') {
-                        nachWs += speicher[i];
-                        tagName = tagName + nachWs;
+                    else {
+                        nachWs += zwischenSpeicher;
+                        tagName += nachWs;
                         nachWs = "";
                     }
                 }
-                t.TagID = tagId;
-                t.name = tagName;
-                tagList.push_back(t);
+                tagSpeicher.TagID = tagNr;
+                tagSpeicher.name = tagName;
+                tagList.push_back(tagSpeicher);
+                tagName = "";
+                nachWs = "";
             }
         }
+
     }
     else
-        error("601 library-Datei existiert, kann aber nicht gelesen werden!\n");
+        error("601 library-Datei existiert, kann aber nicht gelesen werden!");
 
     //tags eingelesen
 
@@ -97,7 +124,7 @@ void GetData()
     author a;
     input_stream >> speicher;
     if (speicher != "[authors]")
-        error("601 library-Datei existiert, kann aber nicht gelesen werden\n");
+        error("601 library-Datei existiert, kann aber nicht gelesen werden");
     while (true) {
         input_stream >> speicher;
         if (istStringEineZahl(speicher)) {
@@ -154,10 +181,12 @@ void GetData()
                 buchName = "";
                 buecher >> namenSpeicher;
                 if (namenSpeicher == '%') {
+                    buchName += '%';
                     while (true) {
                         noskipws(buecher);
                         buecher >> namenSpeicher;
                         if (namenSpeicher == '%') {
+                            buchName += '%';
                             break;
                         }
                         buchName += namenSpeicher;
@@ -217,7 +246,7 @@ void GetData()
         }
     }
     else {
-        error("601 library-Datei existiert, kann aber nicht gelesen werden\n");
+        error("601 library-Datei existiert, kann aber nicht gelesen werden");
 
     }                                                                              // user eingelesen
 
@@ -248,7 +277,7 @@ void GetData()
         }
     }
     else {
-        cerr << "601 library-Datei existiert, kann aber nicht gelesen werden\n";
+        cerr << "601 library-Datei existiert, kann aber nicht gelesen werden";
     }                                                                           //Datei zuende eingelesen
 
     input_stream.close();

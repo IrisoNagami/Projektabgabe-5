@@ -8,7 +8,7 @@ extern vector<leiheintrag> ausleihListe;
 
 void SaveData()
 {
-    string datenbank = "library.txt";                                        // Libary als ofstream oeffnen
+    string datenbank = "library";                                        // Libary als ofstream oeffnen
     ofstream output_stream{ datenbank };
     if (!output_stream.is_open())
         error("602 library-Datei kann nicht geschrieben werden");
@@ -30,10 +30,10 @@ void SaveData()
     output_stream << "[books]\n";
     for (int i = 0; i < bookList.size(); ++i) {
         output_stream << setw(5) << bookList[i].bookID << setw(5) << bookList[i].authorID;
-        string titelInProzentZeichen = "%";
-        titelInProzentZeichen += bookList[i].titel;
-        titelInProzentZeichen += "%";
-        output_stream << setw(40) << titelInProzentZeichen << setw(20) << bookList[i].ISBN;
+        //string titelInProzentZeichen = "%";
+        //titelInProzentZeichen += bookList[i].titel;
+        //titelInProzentZeichen += "%";
+        output_stream << setw(40) << bookList[i].titel << setw(20) << bookList[i].ISBN;
         for (int j = 0; j < bookList[i].tags.size(); ++j) {
             output_stream << setw(5) << bookList[i].tags[j];
         }

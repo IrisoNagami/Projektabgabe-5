@@ -2,6 +2,8 @@
 extern vector<author> authorList;
 extern vector<book> bookList;
 extern vector<user> userList;
+extern vector<tag> tagList;
+
 int idGeneration(const string Klasse)
 {
 	if (Klasse == "User")
